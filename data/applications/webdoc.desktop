@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Web Document
+GenericName=Web Document Handler
+Comment=Open a web document (.web file) in a browser
+# %f is a single local file.  web receives it as one argv element and runs
+# the same libwebdoc open pipeline as `web open`, including both lock checks.
+Exec=web open --path %f
+Icon=application-x-webdoc
+Terminal=false
+StartupNotify=false
+NoDisplay=true
+MimeType=application/x-webdoc;
+Categories=Utility;
+Keywords=web;url;bookmark;link;

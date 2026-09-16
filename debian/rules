@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+%:
+	dh $@
+
+# Only the CLI is shipped, so only the CLI is built.  libwebdoc is linked
+# statically into it: there is no shared library in the package, hence no
+# ABI to keep stable and no -dev package to maintain.
+override_dh_auto_build:
+	$(MAKE) web
+
+override_dh_auto_install:
+	$(MAKE) install-bin DESTDIR=debian/webdoc PREFIX=/usr
+
+override_dh_auto_test:
+	$(MAKE) check
+
+override_dh_auto_clean:
+	$(MAKE) clean

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MIME registration for the web document datatype.
+
+  Registered through shared-mime-info, so every desktop and file manager
+  picks it up; nothing here is specific to Nautilus, Dolphin or Thunar.
+
+  Deliberately NOT declared as a sub-class of application/json.  A .web file
+  is JSON, but declaring the relationship makes every text editor and JSON
+  viewer a valid handler for it, and desktops then pick one of those as the
+  default, which is why an unregistered .web opens as a plain text file.
+  Keeping the type standalone leaves web as the only registered handler.
+
+  The glob carries weight 80 (the default is 50) so the filename decides the
+  type even on desktops that also sniff file contents.
+-->
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-webdoc">
+    <comment>Web document</comment>
+    <comment xml:lang="en">Web document (URL with metadata)</comment>
+    <generic-icon name="application-x-webdoc"/>
+    <icon name="application-x-webdoc"/>
+    <glob pattern="*.web" weight="80"/>
+    <magic priority="60">
+      <match type="string" value="{&#10;  &quot;version&quot;: 1,&#10;  &quot;url&quot;: &quot;http" offset="0"/>
+    </magic>
+  </mime-type>
+</mime-info>

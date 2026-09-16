@@ -1,0 +1,241 @@
+.TH WEB 1 "September 2026" "webdoc 1.0.0" "User Commands"
+.SH NAME
+web \- create and open web documents (.web files)
+.SH SYNOPSIS
+.B web
+.RI [ global-options ]
+.I command
+.RI [ arguments ]
+.RI [ options ]
+.br
+.B web create
+.I name url
+.RI [ options ]
+.br
+.B web edit
+.I name
+.RI [ url ]
+.RI [ options ]
+.br
+.B web delete
+.I name
+.br
+.B web open
+.I name
+.br
+.B web show
+.I name
+.br
+.B web list
+.RI [ directory ]
+.br
+.B web lock
+.RI [ name ]
+.br
+.B web unlock
+.RI [ name ]
+.br
+.B web set
+.I variable value
+.br
+.B web unset
+.I variable
+.br
+.B web variables
+.br
+.B web config
+.SH DESCRIPTION
+.B web
+manages
+.I .web
+files: ordinary files that represent a web URL together with a little
+metadata. A
+.I .web
+file owns all of its own persistent state, so it can be created anywhere,
+moved, copied, renamed or deleted with normal filesystem tools. There is no
+database of web documents and no mandatory directory for them.
+.PP
+A reference given without the
+.I .web
+suffix gets one, so
+.B web open docs
+and
+.B web open docs.web
+name the same file and
+.I docs.web.web
+is never produced. With
+.B --path
+the argument is used exactly as given.
+.SH COMMANDS
+.TP
+.B create \fIname\fR \fIurl\fR
+Creates \fIname\fR.web. Creation never overwrites an existing file; use
+.B edit
+to change one.
+.TP
+.B edit \fIname\fR [\fIurl\fR]
+Changes the URL, the browser, or the lock state of an existing document.
+.TP
+.B delete \fIname\fR
+Removes the document.
+.TP
+.B open \fIname\fR
+Opens the document in a browser. Refused if the global lock is active or the
+document itself is locked. The browser is launched detached: see
+.B BROWSER DETACHMENT
+below.
+.TP
+.B show \fIname\fR
+Prints one document: its path, format version, URL, browser and lock state.
+A directory is refused; use
+.B list
+instead.
+.TP
+.B list \fR[\fIdirectory\fR]
+Lists the
+.I .web
+files in a directory, defaulting to the current one, in the spirit of
+.BR "ls -l" .
+Implemented with filesystem calls rather than by invoking
+.BR ls (1),
+so a file with an adversarial name is only ever a filename.
+.TP
+.B lock \fR[\fIname\fR]\fB, unlock \fR[\fIname\fR]
+With no argument, sets the global lock, which applies to every document.
+With a name, sets that document's own lock, which is stored inside the
+.I .web
+file and therefore travels with copies of it. The two scopes are
+independent: a global unlock does not unlock an individually locked
+document, and unlocking one document does not disable the global lock.
+.TP
+.B set \fIvariable\fR \fIvalue\fR\fB, unset \fIvariable\fR
+Defines or removes a variable: a name/value pair in the global
+configuration. Variables are general, not browser-specific; browser
+selection is simply the first thing that uses them. A document created with
+.B --browser \fIvariable\fR
+refers to the variable by name rather than storing its value, so redefining
+the variable affects every document that uses it. A variable used as a
+browser must hold an absolute path to an executable, which is checked when a
+document is opened.
+.TP
+.B variables
+Prints the defined variables as aligned name and value pairs, one per line.
+.TP
+.B config
+Prints the global configuration state: the version in use, the document
+format version, the file extension, the location of the configuration and
+state files, whether the global lock is active, and how many variables are
+defined. Nothing about individual documents appears, because nothing about
+them is stored globally.
+.SH OPTIONS
+.TP
+.BI --browser " variable"
+Open with the browser named by this variable.
+.TP
+.BI --browser-path " path"
+Open with this exact browser executable.
+.TP
+.B --default-browser
+With
+.BR edit ,
+clears the browser field so the document uses the desktop default again.
+.TP
+.B --locked
+With
+.BR create ,
+creates the document already locked.
+.TP
+.BR --lock ", " --unlock
+With
+.BR edit ,
+sets or clears that document's own lock.
+.TP
+.B --path
+Interprets the argument as a literal filesystem path: no
+.I .web
+suffix is appended and no
+.B ~
+expansion is performed.
+.TP
+.BR -v ", " --verbose
+Reports each step of the operation on standard error. May be given before
+the command or after it, so
+.B web -v open docs
+and
+.B web open docs -v
+are equivalent. Without it,
+.B web
+is silent on success, in the usual Unix way.
+.TP
+.BR -h ", " --help
+Prints usage.
+.TP
+.BR -V ", " --version
+Prints the version.
+.SH OUTPUT
+Results go to standard output; errors and verbose progress reporting go to
+standard error. The output of
+.BR show ", " list ", " variables " and " config
+can therefore be piped into another program whether or not
+.B --verbose
+is in effect.
+.SH BROWSER DETACHMENT
+The browser started by
+.B open
+always runs in its own session with all three of its standard streams
+redirected to
+.IR /dev/null .
+It is reparented to
+.BR init (1),
+so
+.B web
+returns immediately rather than waiting for the browser to exit.
+.PP
+This is unconditional and is not affected by
+.BR --verbose .
+A browser that kept the caller's terminal would print its own startup
+messages into the next shell prompt and could consume the user's keystrokes,
+leaving the session apparently hung. Verbose mode changes what
+.B web
+itself reports, never how the browser is connected. To see a browser's own
+diagnostics, run that browser directly.
+.SH EXIT STATUS
+.TP
+.B 0
+Success.
+.TP
+.B 1
+Operation failed.
+.TP
+.B 2
+Usage error.
+.TP
+.B 3
+Refused because a lock is in effect.
+.SH FILES
+.TP
+.I $XDG_CONFIG_HOME/webdoc/config.json
+Variable mappings. Defaults to
+.IR ~/.config/webdoc/config.json .
+.TP
+.I $XDG_STATE_HOME/webdoc/state.json
+Global lock state. Defaults to
+.IR ~/.local/state/webdoc/state.json .
+.PP
+Neither file lists individual documents: the filesystem is the source of
+truth. Both locations are reported by
+.BR "web config" .
+.SH EXAMPLES
+.nf
+web create postgres https://www.postgresql.org/
+web set chrome /usr/bin/google-chrome
+web create docs https://docs.example.com/ --browser chrome
+web open docs -v
+web lock docs
+web list ~/Bookmarks
+web variables
+web config
+.fi
+.SH SEE ALSO
+.BR xdg-open (1),
+.BR ls (1)

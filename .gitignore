@@ -1,0 +1,55 @@
+# Build artifacts
+*.o
+*.lo
+*.a
+*.so
+*.so.*
+*.la
+web
+
+# Generated build metadata
+.deps/
+.libs/
+*.d
+
+# Debian packaging artifacts
+debian/.debhelper/
+debian/debhelper-build-stamp
+debian/files
+debian/*.substvars
+debian/tmp/
+debian/webdoc/
+debian/libwebdoc*/
+../webdoc_*.deb
+../webdoc_*.buildinfo
+../webdoc_*.changes
+../libwebdoc*.deb
+../libwebdoc*.buildinfo
+../libwebdoc*.changes
+
+# Autotools / libtool generated files
+autom4te.cache/
+config.log
+config.status
+config.cache
+Makefile.in
+aclocal.m4
+ltmain.sh
+
+# Test / coverage artifacts
+*.gcda
+*.gcno
+*.gcov
+coverage/
+test-results/
+
+# Editor / IDE files
+*~
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# OS metadata
+.DS_Store
+Thumbs.db

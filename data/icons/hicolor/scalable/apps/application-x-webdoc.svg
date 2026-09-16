@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Document Drop Shadows -->
+    <filter id="pageShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#0F172A" flood-opacity="0.10"/>
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0F172A" flood-opacity="0.06"/>
+    </filter>
+
+    <!-- Fold Corner Shadow -->
+    <filter id="foldShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="-5" dy="7" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Main White Document (No canvas background) -->
+  <g filter="url(#pageShadow)">
+    <!-- Base Page Path with Top-Right Fold Cutout -->
+    <!-- Page Area: x=86 to 426 (Width: 340), y=46 to 466 (Height: 420) -->
+    <path d="M 94 46 
+             L 366 46 
+             L 426 106 
+             L 426 458 
+             A 8 8 0 0 1 418 466 
+             L 94 466 
+             A 8 8 0 0 1 86 458 
+             L 86 54 
+             A 8 8 0 0 1 94 46 Z" 
+          fill="#FFFFFF"/>
+
+    <!-- Subtle Folded Corner -->
+    <g filter="url(#foldShadow)">
+      <path d="M 366 46 
+               L 366 98 
+               A 8 8 0 0 0 374 106 
+               L 426 106 
+               Z" 
+            fill="#F8FAFC"/>
+    </g>
+  </g>
+
+  <!-- Centered Globe Icon with Medium Line Thickness & Ash Grey Color -->
+  <g transform="translate(256, 256)" stroke="#8A959E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Outer Globe Circle -->
+    <circle cx="0" cy="0" r="100"/>
+    
+    <!-- Equator Line -->
+    <line x1="-100" y1="0" x2="100" y2="0"/>
+    
+    <!-- Central Meridian Line -->
+    <line x1="0" y1="-100" x2="0" y2="100"/>
+    
+    <!-- Longitude Curves -->
+    <path d="M 0 -100 C 55 -100, 55 100, 0 100"/>
+    <path d="M 0 -100 C -55 -100, -55 100, 0 100"/>
+    
+    <!-- Latitude Curves -->
+    <path d="M -86.6 -50 C -86.6 -30, 86.6 -30, 86.6 -50"/>
+    <path d="M -86.6 50 C -86.6 30, 86.6 30, 86.6 50"/>
+  </g>
+</svg>

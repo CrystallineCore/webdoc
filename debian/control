@@ -1,0 +1,27 @@
+Source: webdoc
+Section: utils
+Priority: optional
+Maintainer: Sivaprasad Murali <sivaprasad-murali@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+Homepage: https://github.com/sivaprasad-murali/webdoc
+Vcs-Git: https://github.com/sivaprasad-murali/webdoc.git
+Vcs-Browser: https://github.com/sivaprasad-murali/webdoc
+
+Package: webdoc
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: xdg-utils
+Description: web documents as first-class files for the Linux desktop
+ webdoc makes a .web file an ordinary filesystem object representing a web
+ URL together with a little metadata: an optional browser selection and an
+ optional lock.
+ .
+ A .web file owns all of its own persistent state, so documents can be
+ created anywhere, renamed, moved, copied, version-controlled and deleted
+ with ordinary tools. There is no database, no index and no daemon.
+ .
+ This package provides the web command line tool, its manual page and the
+ desktop MIME integration that lets a file manager open a .web file in a
+ browser.
