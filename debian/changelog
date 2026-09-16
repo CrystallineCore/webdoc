@@ -12,4 +12,4 @@ webdoc (1.0.0-1) unstable; urgency=medium
   * `web variables` lists the defined variables; `web config` reports the
     global configuration state.
 
- -- Sivaprasad Murali <sivaprasad-murali@users.noreply.github.com>  Tue, 16 Sep 2026 00:00:00 +0000
+ -- Sivaprasad Murali <sivaprasad.off@gmail.com>  Tue, 16 Sep 2026 00:00:00 +0000

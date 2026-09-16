@@ -1,7 +1,7 @@
 Source: webdoc
 Section: utils
 Priority: optional
-Maintainer: Sivaprasad Murali <sivaprasad-murali@users.noreply.github.com>
+Maintainer: Sivaprasad Murali <sivaprasad.off@gmail.com>
 Build-Depends: debhelper-compat (= 13)
 Standards-Version: 4.6.2
 Rules-Requires-Root: no
