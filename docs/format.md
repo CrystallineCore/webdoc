@@ -45,11 +45,11 @@ would disagree about which one is authoritative.
 
 The value is a tagged string with exactly one of two prefixes:
 
-* `variable:NAME` — an indirection through a variable defined in the global
+* `variable:NAME`, an indirection through a variable defined in the global
   configuration. `NAME` matches `[A-Za-z0-9_-]{1,64}`. Variables are a
   general name/value facility; a variable used here must resolve to an
   absolute path to an executable, which is checked at open time.
-* `path:/absolute/path` — one specific executable, stored literally.
+* `path:/absolute/path`, one specific executable, stored literally.
 
 ```json
 {

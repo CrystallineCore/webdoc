@@ -37,6 +37,7 @@ aclocal.m4
 ltmain.sh
 
 # Test / coverage artifacts
+test_unit
 *.gcda
 *.gcno
 *.gcov

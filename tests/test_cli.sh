@@ -1,13 +1,56 @@
 #!/bin/sh
 # SPDX-License-Identifier: MIT
-# End-to-end tests for the web CLI.  Usage: sh tests/test_cli.sh ./web
+#
+# End-to-end tests for the web CLI.
+#
+# Usage:
+#   sh tests/test_cli.sh [path-to-web]
+#
+# The binary may be given explicitly.  With no argument it is looked for
+# relative to this script, so the suite works whether it is run from the
+# source root (`make check`, `sh tests/test_cli.sh`) or from inside tests/
+# (`./test_cli.sh`), and the current directory does not matter.
 set -u
 
-WEB=${1:-./web}
-case "$WEB" in
-    /*) ;;
-    *) WEB="$PWD/$WEB" ;;
-esac
+# Directory holding this script, resolved to an absolute path.
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd) || exit 1
+
+if [ "$#" -ge 1 ] && [ -n "$1" ]; then
+    WEB=$1
+    case "$WEB" in
+        /*) ;;
+        *) WEB="$PWD/$WEB" ;;
+    esac
+    if [ ! -x "$WEB" ] || [ ! -f "$WEB" ]; then
+        printf '%s: not an executable file\n' "$WEB" >&2
+        exit 1
+    fi
+else
+    WEB=
+    for candidate in "$script_dir/../web" "$script_dir/web" "$PWD/web"; do
+        if [ -x "$candidate" ] && [ -f "$candidate" ]; then
+            WEB=$candidate
+            break
+        fi
+    done
+    if [ -z "$WEB" ]; then
+        cat >&2 <<'USAGE'
+test_cli.sh: the web binary was not found.
+
+Build it first, from the source root:
+
+    make web
+
+then run the suite with `make check`, or point this script at the binary:
+
+    sh tests/test_cli.sh /path/to/web
+USAGE
+        exit 1
+    fi
+fi
+
+# Normalise to an absolute path: the tests chdir into a temporary directory.
+WEB=$(CDPATH= cd -- "$(dirname -- "$WEB")" && pwd)/$(basename -- "$WEB") || exit 1
 
 TMP=$(mktemp -d /tmp/web-cli-XXXXXX) || exit 1
 export HOME="$TMP"

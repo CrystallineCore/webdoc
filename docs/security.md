@@ -46,10 +46,10 @@ Accepted: `http://` and `https://`, case-insensitively, up to 2048 bytes.
 
 Rejected:
 
-* every other scheme, including `file:`, `javascript:`, `data:` — these are
+* every other scheme, including `file:`, `javascript:` and `data:`, which are
   the schemes that turn "open a bookmark" into local file disclosure or script
   execution in the browser;
-* bytes outside `0x21`–`0x7E`: control characters (notably `\n` and `\r`,
+* bytes outside `0x21` to `0x7E`: control characters (notably `\n` and `\r`,
   which smuggle extra lines into logs and `.desktop` files), spaces, and raw
   non-ASCII, which must be percent-encoded or IDN-encoded by the caller;
 * characters RFC 3986 excludes from URIs anyway: `" < > \ ^ `` { | }`;
@@ -65,12 +65,12 @@ Validation happens on creation, on every load, and again before opening.
 A browser path comes from an untrusted file or from configuration, and it is
 about to be executed, so before spawning:
 
-* the path must be absolute — there is no `PATH` search for an
+* the path must be absolute, so there is no `PATH` search for an
   attacker-chosen name, and no `..` components;
 * it must be a regular file (not a directory, FIFO or device);
 * it must be executable by the current user;
 * it must not be world-writable, and must not sit in a world-writable
-  directory that lacks the sticky bit — either would let any local user
+  directory that lacks the sticky bit. Either would let any local user
   replace the binary we are about to run.
 
 If a document specifies no browser, `xdg-open` is used and the desktop's own
@@ -80,8 +80,8 @@ default applies. `web` never modifies the user's default browser.
 
 The browser is started in a new session (`setsid()`) with all three of its
 standard streams redirected to `/dev/null`, and is reparented to init by a
-double fork. This is unconditional — there is no verbose mode, debug flag or
-environment variable that attaches it to the caller's terminal.
+double fork. This is unconditional: no verbose mode, debug flag or
+environment variable attaches it to the caller's terminal.
 
 That matters beyond tidiness. A long-lived process that keeps a terminal it
 was not meant to keep can write to that terminal after the user has moved on,
@@ -132,8 +132,8 @@ bounds-checked throughout and every allocation failure is propagated.
 
 ## Locking
 
-The lock is a *user intent* mechanism — "do not open this right now" — not a
-security boundary. It is checked in exactly one place, `webdoc_open()`, which is
+The lock is a *user intent* mechanism, meaning "do not open this right now",
+and not a security boundary. It is checked in exactly one place, `webdoc_open()`, which is
 the single pipeline used by the CLI and by the desktop MIME handler alike, so
 there is no second way to open a document that skips the check. Anyone who can
 read the `.web` file can of course read the URL and open it by other means;
